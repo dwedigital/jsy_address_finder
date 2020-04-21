@@ -78,6 +78,7 @@
         const item = document.createTextNode(address["lineFormat"]);
         li.appendChild(item);
         list.appendChild(li);
+        document.querySelectorAll('li')[0].classList.add('active')
       }
 
       input.addEventListener("keyup", lookup);
