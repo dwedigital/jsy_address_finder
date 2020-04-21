@@ -3,27 +3,44 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
     <title>Address Finder Example</title>
-    <meta name="description" content="A quick example of an address finder API for Jersey">
+    <meta
+      name="description"
+      content="A quick example of an address finder API for Jersey"
+    />
   </head>
   <body>
     <nav class="navbar navbar-dark bg-dark mb-5">
-  <span class="navbar-brand mb-0 h1">Address Lookup</span>
-</nav>
-<div class="container p-5">
-    <form action="" class="form-group">
-      <label for="address" >Address:</label>
-      <input type="text" name="" id="address" placeholder="Enter Address" class="form-control" />
-    </form>
-    <ul></ul>
+      <span class="navbar-brand mb-0 h1">Address Lookup</span>
+    </nav>
+    <div class="container p-5">
+      <form action="" class="form-group">
+        <label for="address">Address:</label>
+        <input
+          type="text"
+          name=""
+          id="address"
+          placeholder="Enter Address"
+          class="form-control"
+        />
+      </form>
+      <ul></ul>
     </div>
     <script>
+      const input = document.querySelector("#address");
+      const list = document.querySelector("ul");
+
       function lookup(address) {
-        
         if (address < 3) return;
         const data = { query: input.value };
-        console.log(data);
+
+        // the below API calls a google cloud function that acts as a proxy
         fetch(
           "https://us-central1-fetch-serverless.cloudfunctions.net/addressLookup",
           {
@@ -39,16 +56,19 @@
             return res.json();
           })
           .then((data) => {
+            // clear any results in the list each time
             list.innerHTML = "";
-            console.log(data["addresses"]);
-            const test = [...data["addresses"]];
-            test.forEach((address) => {
+
+            //console.log(data["addresses"]);
+
+            const addresses = [...data["addresses"]];
+            addresses.forEach((address) => {
+              // call the createList function to then add each address to the list
               createList(address);
             });
           })
           .catch((err) => {
-            console.log("Error: ", err);
-            return;
+            console.log("API Error: ", err);
           });
       }
 
@@ -59,8 +79,6 @@
         list.appendChild(li);
       }
 
-      const input = document.querySelector("#address");
-      const list = document.querySelector("ul");
       input.addEventListener("keyup", lookup);
     </script>
   </body>
