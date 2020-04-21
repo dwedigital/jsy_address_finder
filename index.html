@@ -21,7 +21,7 @@
     </nav>
     <div class="container p-5">
       <form action="" class="form-group">
-        <label for="address">Address:</label>
+        <label for="address">Address Lookup:</label>
         <input
           type="text"
           name=""
@@ -30,14 +30,19 @@
           class="form-control"
         />
       </form>
+      <p>Select Your Address</p>
       <ul class="list-group"></ul>
     </div>
     <script>
       const input = document.querySelector("#address");
       const list = document.querySelector("ul");
 
-      function lookup(address) {
-        if (address < 3) return;
+      function lookup(e) {
+        // check the address entered is 3 or more characters and ignore escape
+        if (input.value < 3 || e.keyCode == 27){
+          return;
+
+        } 
         const data = { query: input.value };
 
         // the below API calls a google cloud function that acts as a proxy
@@ -62,35 +67,37 @@
             //console.log(data["addresses"]);
 
             const addresses = [...data["addresses"]];
-            addresses.forEach((address) => {
-              // call the createList function to then add each address to the list
-              createList(address);
-            });
+
+            // call the createList function to then add each address to the list
+            createList(addresses);
           })
           .catch((err) => {
             console.log("API Error: ", err);
           });
       }
 
-      function createList(address) {
-        const li = document.createElement("li");
-        li.classList.add('list-group-item','list-group-item-action')
-        const item = document.createTextNode(address["lineFormat"]);
-        li.appendChild(item);
-        list.appendChild(li);
-        document.querySelectorAll('li')[0].classList.add('active')
+      function createList(addresses) {
 
-        const addressItem = document.querySelectorAll('li')
+        addresses.forEach((address) => {
+          const li = document.createElement("li");
+          li.classList.add("list-group-item", "list-group-item-action");
+          const item = document.createTextNode(address["lineFormat"]);
+          li.appendChild(item);
+          list.appendChild(li);
+        });
 
-        addressItem.forEach(item=>{
-        item.addEventListener('click',(e)=>{
-         input.value= e.target.innerHTML
-        })
-      })
+        const addressItem = document.querySelectorAll("li");
+        addressItem.forEach((item) => {
+          item.addEventListener("click", (e) => {
+            input.value = e.target.innerHTML;
+            list.innerHTML=""
+          });
+        });
+
+        
       }
 
-      input.addEventListener("keyup", lookup);
-      
+      input.addEventListener("keydown", lookup);
     </script>
   </body>
 </html>
