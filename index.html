@@ -30,7 +30,7 @@
           class="form-control"
         />
       </form>
-      <ul></ul>
+      <ul class="list-group"></ul>
     </div>
     <script>
       const input = document.querySelector("#address");
@@ -74,6 +74,7 @@
 
       function createList(address) {
         const li = document.createElement("li");
+        li.classList.add('list-group-item','list-group-item-action')
         const item = document.createTextNode(address["lineFormat"]);
         li.appendChild(item);
         list.appendChild(li);
