@@ -79,9 +79,18 @@
         li.appendChild(item);
         list.appendChild(li);
         document.querySelectorAll('li')[0].classList.add('active')
+
+        const addressItem = document.querySelectorAll('li')
+
+        addressItem.forEach(item=>{
+        item.addEventListener('click',(e)=>{
+         input.value= e.target.innerHTML
+        })
+      })
       }
 
       input.addEventListener("keyup", lookup);
+      
     </script>
   </body>
 </html>
