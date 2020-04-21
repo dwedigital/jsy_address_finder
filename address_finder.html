@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Document</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark bg-dark mb-5">
+  <span class="navbar-brand mb-0 h1">Address Lookup</span>
+</nav>
+<div class="container p-5">
+    <form action="" class="form-group">
+      <label for="address" >Address:</label>
+      <input type="text" name="" id="address" placeholder="Enter Address" class="form-control" />
+    </form>
+    <ul></ul>
+    </div>
+    <script>
+      function lookup(address) {
+        
+        if (address < 3) return;
+        const data = { query: input.value };
+        console.log(data);
+        fetch(
+          "https://us-central1-fetch-serverless.cloudfunctions.net/addressLookup",
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          }
+        )
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            list.innerHTML = "";
+            console.log(data["addresses"]);
+            const test = [...data["addresses"]];
+            test.forEach((address) => {
+              createList(address);
+            });
+          })
+          .catch((err) => {
+            console.log("Error: ", err);
+            return;
+          });
+      }
+
+      function createList(address) {
+        const li = document.createElement("li");
+        const item = document.createTextNode(address["lineFormat"]);
+        li.appendChild(item);
+        list.appendChild(li);
+      }
+
+      const input = document.querySelector("#address");
+      const list = document.querySelector("ul");
+      input.addEventListener("keyup", lookup);
+    </script>
+  </body>
+</html>
